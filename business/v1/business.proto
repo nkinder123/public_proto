@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api.business.v1;
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+option go_package = "review-b/api/business/v1;v1";
+option java_multiple_files = true;
+option java_package = ".api.business.v1";
+
+service Business{
+  rpc GreateReply(CreateReplyReq)returns(CreateReplyResp){
+    option(google.api.http)={
+      post:"/v1/business/createreply"
+      body:"*"
+    };
+  }
+}
+
+message CreateReplyReq{
+  int64 review_id =1 [(validate.rules).int64={gt:0}];
+  int64  store_id=2 [(validate.rules).int64={gt:0}];
+  string content=3 [(validate.rules).string={min_len:10,max_len:255}];
+  string pic_info=4;
+  string video_info=5;
+}
+
+message CreateReplyResp{
+ int64 reply_id =1;
+}
