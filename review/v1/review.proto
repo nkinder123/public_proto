@@ -35,7 +35,15 @@ service Review {
 			get:"/v1/review/getlist"
 		};
 	};
+
+	rpc ReplyReview(ReplyReviewReq)returns(ReplyReviewReply){
+		option (google.api.http)={
+			post:"/v1/review/reply"
+			body:"*"
+		};
+	}
 }
+
 
 message CreateReviewRequest {
 	int64 userID=1 [(validate.rules).int64={gt:0}];
@@ -64,3 +72,14 @@ message GetReviewReply {}
 
 message ListReviewRequest {}
 message ListReviewReply {}
+
+message ReplyReviewReq{
+	int64 review_id =1 [(validate.rules).int64={gt:0}];
+	int64  store_id=2 [(validate.rules).int64={gt:0}];
+	string content=3 [(validate.rules).string={min_len:10,max_len:255}];
+	string pic_info=4;
+	string video_info=5;
+}
+message ReplyReviewReply{
+	int64 reply_id =1;
+}

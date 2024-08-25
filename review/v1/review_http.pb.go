@@ -23,6 +23,7 @@ const OperationReviewCreateReview = "/api.review.v1.Review/CreateReview"
 const OperationReviewDeleteReview = "/api.review.v1.Review/DeleteReview"
 const OperationReviewGetReview = "/api.review.v1.Review/GetReview"
 const OperationReviewListReview = "/api.review.v1.Review/ListReview"
+const OperationReviewReplyReview = "/api.review.v1.Review/ReplyReview"
 const OperationReviewUpdateReview = "/api.review.v1.Review/UpdateReview"
 
 type ReviewHTTPServer interface {
@@ -30,6 +31,7 @@ type ReviewHTTPServer interface {
 	DeleteReview(context.Context, *DeleteReviewRequest) (*DeleteReviewReply, error)
 	GetReview(context.Context, *GetReviewRequest) (*GetReviewReply, error)
 	ListReview(context.Context, *ListReviewRequest) (*ListReviewReply, error)
+	ReplyReview(context.Context, *ReplyReviewReq) (*ReplyReviewReply, error)
 	UpdateReview(context.Context, *UpdateReviewRequest) (*UpdateReviewReply, error)
 }
 
@@ -40,6 +42,7 @@ func RegisterReviewHTTPServer(s *http.Server, srv ReviewHTTPServer) {
 	r.DELETE("/v1/review/delete", _Review_DeleteReview0_HTTP_Handler(srv))
 	r.GET("/v1/review/get", _Review_GetReview0_HTTP_Handler(srv))
 	r.GET("/v1/review/getlist", _Review_ListReview0_HTTP_Handler(srv))
+	r.POST("/v1/review/reply", _Review_ReplyReview0_HTTP_Handler(srv))
 }
 
 func _Review_CreateReview0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
@@ -143,11 +146,34 @@ func _Review_ListReview0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Review_ReplyReview0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ReplyReviewReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationReviewReplyReview)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ReplyReview(ctx, req.(*ReplyReviewReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ReplyReviewReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ReviewHTTPClient interface {
 	CreateReview(ctx context.Context, req *CreateReviewRequest, opts ...http.CallOption) (rsp *CreateReviewReply, err error)
 	DeleteReview(ctx context.Context, req *DeleteReviewRequest, opts ...http.CallOption) (rsp *DeleteReviewReply, err error)
 	GetReview(ctx context.Context, req *GetReviewRequest, opts ...http.CallOption) (rsp *GetReviewReply, err error)
 	ListReview(ctx context.Context, req *ListReviewRequest, opts ...http.CallOption) (rsp *ListReviewReply, err error)
+	ReplyReview(ctx context.Context, req *ReplyReviewReq, opts ...http.CallOption) (rsp *ReplyReviewReply, err error)
 	UpdateReview(ctx context.Context, req *UpdateReviewRequest, opts ...http.CallOption) (rsp *UpdateReviewReply, err error)
 }
 
@@ -205,6 +231,19 @@ func (c *ReviewHTTPClientImpl) ListReview(ctx context.Context, in *ListReviewReq
 	opts = append(opts, http.Operation(OperationReviewListReview))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ReviewHTTPClientImpl) ReplyReview(ctx context.Context, in *ReplyReviewReq, opts ...http.CallOption) (*ReplyReviewReply, error) {
+	var out ReplyReviewReply
+	pattern := "/v1/review/reply"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationReviewReplyReview))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

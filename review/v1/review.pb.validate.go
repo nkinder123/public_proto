@@ -1163,3 +1163,242 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListReviewReplyValidationError{}
+
+// Validate checks the field values on ReplyReviewReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ReplyReviewReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ReplyReviewReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ReplyReviewReqMultiError,
+// or nil if none found.
+func (m *ReplyReviewReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ReplyReviewReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetReviewId() <= 0 {
+		err := ReplyReviewReqValidationError{
+			field:  "ReviewId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetStoreId() <= 0 {
+		err := ReplyReviewReqValidationError{
+			field:  "StoreId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetContent()); l < 10 || l > 255 {
+		err := ReplyReviewReqValidationError{
+			field:  "Content",
+			reason: "value length must be between 10 and 255 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for PicInfo
+
+	// no validation rules for VideoInfo
+
+	if len(errors) > 0 {
+		return ReplyReviewReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// ReplyReviewReqMultiError is an error wrapping multiple validation errors
+// returned by ReplyReviewReq.ValidateAll() if the designated constraints
+// aren't met.
+type ReplyReviewReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ReplyReviewReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ReplyReviewReqMultiError) AllErrors() []error { return m }
+
+// ReplyReviewReqValidationError is the validation error returned by
+// ReplyReviewReq.Validate if the designated constraints aren't met.
+type ReplyReviewReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ReplyReviewReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ReplyReviewReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ReplyReviewReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ReplyReviewReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ReplyReviewReqValidationError) ErrorName() string { return "ReplyReviewReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ReplyReviewReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sReplyReviewReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ReplyReviewReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ReplyReviewReqValidationError{}
+
+// Validate checks the field values on ReplyReviewReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ReplyReviewReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ReplyReviewReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ReplyReviewReplyMultiError, or nil if none found.
+func (m *ReplyReviewReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ReplyReviewReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ReplyId
+
+	if len(errors) > 0 {
+		return ReplyReviewReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ReplyReviewReplyMultiError is an error wrapping multiple validation errors
+// returned by ReplyReviewReply.ValidateAll() if the designated constraints
+// aren't met.
+type ReplyReviewReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ReplyReviewReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ReplyReviewReplyMultiError) AllErrors() []error { return m }
+
+// ReplyReviewReplyValidationError is the validation error returned by
+// ReplyReviewReply.Validate if the designated constraints aren't met.
+type ReplyReviewReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ReplyReviewReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ReplyReviewReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ReplyReviewReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ReplyReviewReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ReplyReviewReplyValidationError) ErrorName() string { return "ReplyReviewReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ReplyReviewReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sReplyReviewReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ReplyReviewReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ReplyReviewReplyValidationError{}
