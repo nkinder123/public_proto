@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.appeal.v1;
+import "validate/validate.proto";
+option go_package = "review-o//api/appeal/v1;v1";
+option java_multiple_files = true;
+option java_package = ".api.appeal.v1";
+
+service Appeal {
+	rpc OpCreateAppeal (OpCreateAppealRequest) returns (OpCreateAppealReply);
+	rpc UpdateAppeal (UpdateAppealRequest) returns (UpdateAppealReply);
+	rpc DeleteAppeal (DeleteAppealRequest) returns (DeleteAppealReply);
+	rpc GetAppeal (GetAppealRequest) returns (GetAppealReply);
+	rpc ListAppeal (ListAppealRequest) returns (ListAppealReply);
+}
+
+message OpCreateAppealRequest {
+	int64 appeal_id=1 [(validate.rules).int64={gt:0}];
+	string op_remark=2 [(validate.rules).string={min_len:2}];
+	string op_user=3 [(validate.rules).string={min_len:2}];
+}
+message OpCreateAppealReply {
+}
+
+message UpdateAppealRequest {}
+message UpdateAppealReply {}
+
+message DeleteAppealRequest {}
+message DeleteAppealReply {}
+
+message GetAppealRequest {}
+message GetAppealReply {}
+
+message ListAppealRequest {}
+message ListAppealReply {}

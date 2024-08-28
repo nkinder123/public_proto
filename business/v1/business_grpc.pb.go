@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.27.0
-// source: business/v1/business.proto
+// source: api/business/v1/business.proto
 
 package v1
 
@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Business_GreateReply_FullMethodName = "/api.business.v1.Business/GreateReply"
+	Business_GreateReply_FullMethodName  = "/api.business.v1.Business/GreateReply"
+	Business_GreateAppeal_FullMethodName = "/api.business.v1.Business/GreateAppeal"
 )
 
 // BusinessClient is the client API for Business service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BusinessClient interface {
 	GreateReply(ctx context.Context, in *CreateReplyReq, opts ...grpc.CallOption) (*CreateReplyResp, error)
+	GreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error)
 }
 
 type businessClient struct {
@@ -47,11 +49,22 @@ func (c *businessClient) GreateReply(ctx context.Context, in *CreateReplyReq, op
 	return out, nil
 }
 
+func (c *businessClient) GreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAppealReply)
+	err := c.cc.Invoke(ctx, Business_GreateAppeal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BusinessServer is the server API for Business service.
 // All implementations must embed UnimplementedBusinessServer
 // for forward compatibility.
 type BusinessServer interface {
 	GreateReply(context.Context, *CreateReplyReq) (*CreateReplyResp, error)
+	GreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error)
 	mustEmbedUnimplementedBusinessServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedBusinessServer struct{}
 
 func (UnimplementedBusinessServer) GreateReply(context.Context, *CreateReplyReq) (*CreateReplyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GreateReply not implemented")
+}
+func (UnimplementedBusinessServer) GreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GreateAppeal not implemented")
 }
 func (UnimplementedBusinessServer) mustEmbedUnimplementedBusinessServer() {}
 func (UnimplementedBusinessServer) testEmbeddedByValue()                  {}
@@ -104,6 +120,24 @@ func _Business_GreateReply_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Business_GreateAppeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAppealRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BusinessServer).GreateAppeal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Business_GreateAppeal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BusinessServer).GreateAppeal(ctx, req.(*CreateAppealRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Business_ServiceDesc is the grpc.ServiceDesc for Business service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -115,7 +149,11 @@ var Business_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GreateReply",
 			Handler:    _Business_GreateReply_Handler,
 		},
+		{
+			MethodName: "GreateAppeal",
+			Handler:    _Business_GreateAppeal_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "business/v1/business.proto",
+	Metadata: "api/business/v1/business.proto",
 }

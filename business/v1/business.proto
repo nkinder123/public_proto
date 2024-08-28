@@ -14,7 +14,15 @@ service Business{
       body:"*"
     };
   }
+  rpc GreateAppeal(CreateAppealRequest)returns(CreateAppealReply){
+    option (google.api.http)={
+      post:"/v1/business/create/appeal"
+      body:"*"
+    };
+  }
 }
+
+
 
 message CreateReplyReq{
   int64 review_id =1 [(validate.rules).int64={gt:0}];
@@ -26,4 +34,19 @@ message CreateReplyReq{
 
 message CreateReplyResp{
  int64 reply_id =1;
+}
+
+message CreateAppealRequest{
+  int64 appeal_id =1 [(validate.rules).int64={gt:0}];
+  int64 review_id =2 [(validate.rules).int64={gt:0}];
+  int64 store_id =3 [(validate.rules).int64={gt:0}];
+  int32 status =4 [(validate.rules).int32={in:[10,20,30,40]}];
+  string reason=5 [(validate.rules).string={min_len:2}];
+  string content=6 [(validate.rules).string={min_len:10}];
+  string pic_info=7;
+  string video_info=8;
+}
+
+message CreateAppealReply{
+  int64 appeal_id=1;
 }
