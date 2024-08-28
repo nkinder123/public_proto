@@ -118,4 +118,5 @@ message OpCreateAppealRequest {
 	string op_user=3 [(validate.rules).string={min_len:2}];
 }
 message OpCreateAppealReply {
+	int64 appeal_id=1;
 }
