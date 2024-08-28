@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.27.0
-// source: api/appeal/v1/appeal.proto
+// source: appeal/v1/appeal.proto
 
 package v1
 
@@ -269,5 +269,5 @@ var Appeal_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/appeal/v1/appeal.proto",
+	Metadata: "appeal/v1/appeal.proto",
 }
