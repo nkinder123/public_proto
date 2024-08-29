@@ -113,9 +113,11 @@ message CreateAppealReply{
 }
 
 message OpCreateAppealRequest {
+
 	int64 appeal_id=1 [(validate.rules).int64={gt:0}];
 	string op_remark=2 [(validate.rules).string={min_len:2}];
 	string op_user=3 [(validate.rules).string={min_len:2}];
+	int32 status =4 [(validate.rules).int32={in:[10,20,30,40]}];
 }
 message OpCreateAppealReply {
 	int64 appeal_id=1;
