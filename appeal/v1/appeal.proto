@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/api/annotations.proto";
 package api.appeal.v1;
 import "validate/validate.proto";
 option go_package = "review-o//api/appeal/v1;v1";
@@ -7,7 +7,12 @@ option java_multiple_files = true;
 option java_package = ".api.appeal.v1";
 
 service Appeal {
-	rpc OpCreateAppeal (OpCreateAppealRequest) returns (OpCreateAppealReply);
+	rpc OpCreateAppeal (OpCreateAppealRequest) returns (OpCreateAppealReply){
+		option (google.api.http)={
+			post:"/v1/op/opcreate"
+			body:"*"
+		};
+	};
 	rpc UpdateAppeal (UpdateAppealRequest) returns (UpdateAppealReply);
 	rpc DeleteAppeal (DeleteAppealRequest) returns (DeleteAppealReply);
 	rpc GetAppeal (GetAppealRequest) returns (GetAppealReply);
@@ -15,9 +20,11 @@ service Appeal {
 }
 
 message OpCreateAppealRequest {
+
 	int64 appeal_id=1 [(validate.rules).int64={gt:0}];
 	string op_remark=2 [(validate.rules).string={min_len:2}];
 	string op_user=3 [(validate.rules).string={min_len:2}];
+	int32 status =4 [(validate.rules).int32={in:[10,20,30,40]}];
 }
 message OpCreateAppealReply {
 }
