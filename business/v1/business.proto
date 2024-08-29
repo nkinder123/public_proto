@@ -14,7 +14,7 @@ service Business{
       body:"*"
     };
   }
-  rpc GreateAppeal(CreateAppealRequest)returns(CreateAppealReply){
+  rpc CreateAppeal(CreateAppealRequest)returns(CreateAppealReply){
     option (google.api.http)={
       post:"/v1/business/create/appeal"
       body:"*"

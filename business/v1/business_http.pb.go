@@ -19,18 +19,18 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationBusinessGreateAppeal = "/api.business.v1.Business/GreateAppeal"
+const OperationBusinessCreateAppeal = "/api.business.v1.Business/CreateAppeal"
 const OperationBusinessGreateReply = "/api.business.v1.Business/GreateReply"
 
 type BusinessHTTPServer interface {
-	GreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error)
+	CreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error)
 	GreateReply(context.Context, *CreateReplyReq) (*CreateReplyResp, error)
 }
 
 func RegisterBusinessHTTPServer(s *http.Server, srv BusinessHTTPServer) {
 	r := s.Route("/")
 	r.POST("/v1/business/createreply", _Business_GreateReply0_HTTP_Handler(srv))
-	r.POST("/v1/business/create/appeal", _Business_GreateAppeal0_HTTP_Handler(srv))
+	r.POST("/v1/business/create/appeal", _Business_CreateAppeal0_HTTP_Handler(srv))
 }
 
 func _Business_GreateReply0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
@@ -55,7 +55,7 @@ func _Business_GreateReply0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.C
 	}
 }
 
-func _Business_GreateAppeal0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
+func _Business_CreateAppeal0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAppealRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -64,9 +64,9 @@ func _Business_GreateAppeal0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationBusinessGreateAppeal)
+		http.SetOperation(ctx, OperationBusinessCreateAppeal)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GreateAppeal(ctx, req.(*CreateAppealRequest))
+			return srv.CreateAppeal(ctx, req.(*CreateAppealRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -78,7 +78,7 @@ func _Business_GreateAppeal0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.
 }
 
 type BusinessHTTPClient interface {
-	GreateAppeal(ctx context.Context, req *CreateAppealRequest, opts ...http.CallOption) (rsp *CreateAppealReply, err error)
+	CreateAppeal(ctx context.Context, req *CreateAppealRequest, opts ...http.CallOption) (rsp *CreateAppealReply, err error)
 	GreateReply(ctx context.Context, req *CreateReplyReq, opts ...http.CallOption) (rsp *CreateReplyResp, err error)
 }
 
@@ -90,11 +90,11 @@ func NewBusinessHTTPClient(client *http.Client) BusinessHTTPClient {
 	return &BusinessHTTPClientImpl{client}
 }
 
-func (c *BusinessHTTPClientImpl) GreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...http.CallOption) (*CreateAppealReply, error) {
+func (c *BusinessHTTPClientImpl) CreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...http.CallOption) (*CreateAppealReply, error) {
 	var out CreateAppealReply
 	pattern := "/v1/business/create/appeal"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationBusinessGreateAppeal))
+	opts = append(opts, http.Operation(OperationBusinessCreateAppeal))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
