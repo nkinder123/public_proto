@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Business_GreateReply_FullMethodName  = "/api.business.v1.Business/GreateReply"
-	Business_GreateAppeal_FullMethodName = "/api.business.v1.Business/GreateAppeal"
+	Business_CreateAppeal_FullMethodName = "/api.business.v1.Business/CreateAppeal"
 )
 
 // BusinessClient is the client API for Business service.
@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BusinessClient interface {
 	GreateReply(ctx context.Context, in *CreateReplyReq, opts ...grpc.CallOption) (*CreateReplyResp, error)
-	GreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error)
+	CreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error)
 }
 
 type businessClient struct {
@@ -49,10 +49,10 @@ func (c *businessClient) GreateReply(ctx context.Context, in *CreateReplyReq, op
 	return out, nil
 }
 
-func (c *businessClient) GreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error) {
+func (c *businessClient) CreateAppeal(ctx context.Context, in *CreateAppealRequest, opts ...grpc.CallOption) (*CreateAppealReply, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateAppealReply)
-	err := c.cc.Invoke(ctx, Business_GreateAppeal_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Business_CreateAppeal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *businessClient) GreateAppeal(ctx context.Context, in *CreateAppealReque
 // for forward compatibility.
 type BusinessServer interface {
 	GreateReply(context.Context, *CreateReplyReq) (*CreateReplyResp, error)
-	GreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error)
+	CreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error)
 	mustEmbedUnimplementedBusinessServer()
 }
 
@@ -78,8 +78,8 @@ type UnimplementedBusinessServer struct{}
 func (UnimplementedBusinessServer) GreateReply(context.Context, *CreateReplyReq) (*CreateReplyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GreateReply not implemented")
 }
-func (UnimplementedBusinessServer) GreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GreateAppeal not implemented")
+func (UnimplementedBusinessServer) CreateAppeal(context.Context, *CreateAppealRequest) (*CreateAppealReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAppeal not implemented")
 }
 func (UnimplementedBusinessServer) mustEmbedUnimplementedBusinessServer() {}
 func (UnimplementedBusinessServer) testEmbeddedByValue()                  {}
@@ -120,20 +120,20 @@ func _Business_GreateReply_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Business_GreateAppeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Business_CreateAppeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAppealRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BusinessServer).GreateAppeal(ctx, in)
+		return srv.(BusinessServer).CreateAppeal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Business_GreateAppeal_FullMethodName,
+		FullMethod: Business_CreateAppeal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BusinessServer).GreateAppeal(ctx, req.(*CreateAppealRequest))
+		return srv.(BusinessServer).CreateAppeal(ctx, req.(*CreateAppealRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,8 +150,8 @@ var Business_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Business_GreateReply_Handler,
 		},
 		{
-			MethodName: "GreateAppeal",
-			Handler:    _Business_GreateAppeal_Handler,
+			MethodName: "CreateAppeal",
+			Handler:    _Business_CreateAppeal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
