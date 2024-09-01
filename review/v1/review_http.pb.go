@@ -26,6 +26,7 @@ const OperationReviewGetReview = "/api.review.v1.Review/GetReview"
 const OperationReviewListReview = "/api.review.v1.Review/ListReview"
 const OperationReviewOpReAppeal = "/api.review.v1.Review/OpReAppeal"
 const OperationReviewReplyReview = "/api.review.v1.Review/ReplyReview"
+const OperationReviewSearchReviewByStoreId = "/api.review.v1.Review/SearchReviewByStoreId"
 const OperationReviewUpdateReview = "/api.review.v1.Review/UpdateReview"
 
 type ReviewHTTPServer interface {
@@ -36,6 +37,7 @@ type ReviewHTTPServer interface {
 	ListReview(context.Context, *ListReviewRequest) (*ListReviewReply, error)
 	OpReAppeal(context.Context, *OpCreateAppealRequest) (*OpCreateAppealReply, error)
 	ReplyReview(context.Context, *ReplyReviewReq) (*ReplyReviewReply, error)
+	SearchReviewByStoreId(context.Context, *SearchReviewRequest) (*SearchReveiwReply, error)
 	UpdateReview(context.Context, *UpdateReviewRequest) (*UpdateReviewReply, error)
 }
 
@@ -49,6 +51,7 @@ func RegisterReviewHTTPServer(s *http.Server, srv ReviewHTTPServer) {
 	r.POST("/v1/review/reply", _Review_ReplyReview0_HTTP_Handler(srv))
 	r.POST("/v1/review/create/appeal", _Review_CreateAppeal1_HTTP_Handler(srv))
 	r.POST("/v1/review/create/op", _Review_OpReAppeal0_HTTP_Handler(srv))
+	r.POST("/v1/review/bystore", _Review_SearchReviewByStoreId0_HTTP_Handler(srv))
 }
 
 func _Review_CreateReview0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
@@ -218,6 +221,28 @@ func _Review_OpReAppeal0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _Review_SearchReviewByStoreId0_HTTP_Handler(srv ReviewHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SearchReviewRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationReviewSearchReviewByStoreId)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SearchReviewByStoreId(ctx, req.(*SearchReviewRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SearchReveiwReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ReviewHTTPClient interface {
 	CreateAppeal(ctx context.Context, req *CreateAppealRequest, opts ...http.CallOption) (rsp *CreateAppealReply, err error)
 	CreateReview(ctx context.Context, req *CreateReviewRequest, opts ...http.CallOption) (rsp *CreateReviewReply, err error)
@@ -226,6 +251,7 @@ type ReviewHTTPClient interface {
 	ListReview(ctx context.Context, req *ListReviewRequest, opts ...http.CallOption) (rsp *ListReviewReply, err error)
 	OpReAppeal(ctx context.Context, req *OpCreateAppealRequest, opts ...http.CallOption) (rsp *OpCreateAppealReply, err error)
 	ReplyReview(ctx context.Context, req *ReplyReviewReq, opts ...http.CallOption) (rsp *ReplyReviewReply, err error)
+	SearchReviewByStoreId(ctx context.Context, req *SearchReviewRequest, opts ...http.CallOption) (rsp *SearchReveiwReply, err error)
 	UpdateReview(ctx context.Context, req *UpdateReviewRequest, opts ...http.CallOption) (rsp *UpdateReviewReply, err error)
 }
 
@@ -320,6 +346,19 @@ func (c *ReviewHTTPClientImpl) ReplyReview(ctx context.Context, in *ReplyReviewR
 	pattern := "/v1/review/reply"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationReviewReplyReview))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ReviewHTTPClientImpl) SearchReviewByStoreId(ctx context.Context, in *SearchReviewRequest, opts ...http.CallOption) (*SearchReveiwReply, error) {
+	var out SearchReveiwReply
+	pattern := "/v1/review/bystore"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationReviewSearchReviewByStoreId))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

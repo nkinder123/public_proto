@@ -54,9 +54,22 @@ service Review {
 			body:"*"
 		};
 	}
+	rpc SearchReviewByStoreId(SearchReviewRequest)returns(SearchReveiwReply){
+		option (google.api.http)={
+			post:"/v1/review/bystore",
+			body:"*"
+		};
+	}
 }
 
+message SearchReviewRequest{
+	int64 store_id =1;
+	int32  page=2;
+	int32 limit=3;
+}
+message SearchReveiwReply{
 
+}
 message CreateReviewRequest {
 	int64 userID=1 [(validate.rules).int64={gt:0}];
 	int64 orderID=2 [(validate.rules).int64={gt:0}];
